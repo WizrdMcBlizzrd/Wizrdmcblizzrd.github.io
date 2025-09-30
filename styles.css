@@ -10,6 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: auto;
+    cursor: url('/cursor.png'), auto; /* Custom cursor */
 }
 
 .buy-btn {
@@ -17,19 +18,19 @@ body {
     background: url('/button.png') no-repeat center center;
     background-size: contain;
     border: none;
-    border-radius: 0; /* Removed radius to match background better */
+    border-radius: 0;
     cursor: pointer;
     width: 600px;
     height: 200px;
     position: relative;
-    outline: none; /* Removes default focus outline */
-    box-shadow: none; /* Removes shadow to avoid highlighting */
+    outline: none;
+    box-shadow: none;
 }
 
 .buy-btn:hover {
     background-image: url('/button_overlay.png'), url('/button.png');
     background-size: contain, contain;
     background-position: center, center;
-    outline: none; /* Ensures no outline on hover */
-    box-shadow: none; /* Ensures no shadow on hover */
+    outline: none;
+    box-shadow: none;
 }
