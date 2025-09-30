@@ -2,32 +2,34 @@ body {
     margin: 0;
     padding: 0;
     background: url('/gifbackround.gif') no-repeat center center fixed;
-    background-size: contain; /* Changed to contain to show full GIF, may need adjustment */
-    background-position: center; /* Centers the GIF */
-    min-height: 100vh; /* Minimum viewport height */
-    min-width: 100vw; /* Minimum viewport width */
+    background-size: contain;
+    background-position: center;
+    min-height: 100vh;
+    min-width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: auto; /* Allows scroll if GIF is smaller than viewport */
+    overflow: auto;
 }
 
 .buy-btn {
-    padding: 0; /* No padding since no text */
+    padding: 0;
     background: url('/button.png') no-repeat center center;
     background-size: contain;
     border: none;
-    border-radius: 10px;
+    border-radius: 0; /* Removed radius to match background better */
     cursor: pointer;
-    width: 600px; /* Doubled from 300px for larger size */
-    height: 200px; /* Doubled from 100px for larger size */
+    width: 600px;
+    height: 200px;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Visibility shadow */
+    outline: none; /* Removes default focus outline */
+    box-shadow: none; /* Removes shadow to avoid highlighting */
 }
 
 .buy-btn:hover {
     background-image: url('/button_overlay.png'), url('/button.png');
     background-size: contain, contain;
     background-position: center, center;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* Enhanced shadow on hover */
+    outline: none; /* Ensures no outline on hover */
+    box-shadow: none; /* Ensures no shadow on hover */
 }
