@@ -1,4 +1,8 @@
 document.getElementById('buyBtn').addEventListener('click', async () => {
+    if (!window.satsConnect) {
+        alert('Sats Connect not loaded. Ensure Xverse is installed and active.');
+        return;
+    }
     try {
         const result = await window.satsConnect.request('getAccounts', {
             purposes: ['ordinals', 'payment'],
@@ -6,8 +10,7 @@ document.getElementById('buyBtn').addEventListener('click', async () => {
         });
         const address = result.accounts.find(acc => acc.purpose === 'ordinals').address;
         alert(`Connected to Xverse wallet: ${address}`);
-        // Store address or proceed with next step (e.g., payment) here later
     } catch (err) {
-        alert('Wallet connection failed: ' + err.message + '. Install Xverse wallet.');
+        alert('Wallet connection failed: ' + err.message + '. Ensure Xverse is installed and unlocked.');
     }
 });
