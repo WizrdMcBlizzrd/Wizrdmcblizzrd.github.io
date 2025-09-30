@@ -1,0 +1,22 @@
+[
+  {
+    "id": "test-inscription-id-1",
+    "txid": "test-txid-1",
+    "vout": 0,
+    "image": "https://ibb.co/your-ordinal-image-1.jpg",
+    "name": "Ordinal #1 - Pixel Wizard",
+    "description": "Magical pixel art inscribed on Bitcoin",
+    "price": 0.001,
+    "sold": false
+  },
+  {
+    "id": "test-inscription-id-2",
+    "txid": "test-txid-2",
+    "vout": 1,
+    "image": "https://ibb.co/your-ordinal-image-2.jpg",
+    "name": "Ordinal #2 - Crypto Rat",
+    "description": "Sneaky rat on the blockchain",
+    "price": 0.0005,
+    "sold": false
+  }
+]

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy My Bitcoin Ordinals</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@hirosystems/sats-connect@2"></script>
+</head>
+<body>
+    <h1>Buy My Bitcoin Ordinals by WizrdMcBlizzrd</h1>
+    <button id="connectBtn">Connect Wallet</button>
+    <p id="userAddress"></p>
+    <div id="gallery" class="gallery"></div>
+    
+    <div id="paymentModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Pay <span id="payAmount"></span> BTC for <span id="payOrdinal"></span></h2>
+            <p>Send to: <span id="payAddress"></span></p>
+            <button id="sendPayment">Send Payment</button>
+            <p>Tx ID: <input type="text" id="txId" placeholder="Paste tx ID after sending"></p>
+            <button id="confirmPay">Confirm Payment</button>
+            <button id="closeModal">Cancel</button>
+            <div id="loadingSpinner" style="display:none;"><img src="loading.png" alt="Loading"></div>
+        </div>
+    </div>
+    
+    <div id="transferModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Transfer Ordinal</h2>
+            <p>Ordinal: <span id="transferOrdinal"></span></p>
+            <p>To: <span id="transferAddress"></span></p>
+            <p>TxID: <span id="transferTxid"></span>, Vout: <span id="transferVout"></span></p>
+            <p>Open your wallet (Xverse/Unisat), select this UTXO, and send to the address above.</p>
+            <button id="closeTransfer">Done</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

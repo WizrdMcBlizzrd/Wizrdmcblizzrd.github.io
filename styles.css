@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background: url('/gifbackround.gif') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #f7931a;
+    text-shadow: 2px 2px 4px #000;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+#connectBtn, .buy-btn {
+    padding: 12px 24px;
+    background: url('/button.png') no-repeat center center;
+    background-size: contain;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px; /* Adjust based on button.png size */
+    height: 50px; /* Adjust based on button.png size */
+    position: relative;
+    overflow: hidden;
+}
+
+.buy-btn:hover {
+    background-image: url('/button_overlay.png'), url('/button.png');
+    background-size: contain, contain;
+    background-position: center, center;
+}
+
+#connectBtn:disabled, .buy-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+#connectBtn:hover, .buy-btn:hover:not(:disabled) {
+    background-color: transparent; /* Ensure overlay shows */
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.ordinal {
+    background: rgba(42, 42, 42, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #444;
+    transition: transform 0.2s;
+}
+
+.ordinal:hover {
+    transform: scale(1.05);
+}
+
+img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.price {
+    color: #0f0;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: rgba(42, 42, 42, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#payAddress, #transferAddress {
+    font-size: 0.9em;
+    word-break: break-all;
+    color: #ddd;
+}
+
+#txId {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+#txId::placeholder {
+    color: #888;
+}
+
+#loadingSpinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 1s linear infinite;
+}
+
+#loadingSpinner img {
+    width: 50px; /* Adjust based on loading.png size */
+    height: 50px; /* Adjust based on loading.png size */
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
