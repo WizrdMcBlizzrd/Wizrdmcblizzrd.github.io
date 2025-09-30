@@ -10,7 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: auto;
-    cursor: url('/cursor.png'), auto; /* Custom cursor */
+    cursor: url('/cursor.png') 32 32, auto; /* Centered at 64x64px, offset to middle */
 }
 
 .buy-btn {
