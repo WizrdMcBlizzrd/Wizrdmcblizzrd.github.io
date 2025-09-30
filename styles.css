@@ -2,26 +2,27 @@ body {
     margin: 0;
     padding: 0;
     background: url('/gifbackround.gif') no-repeat center center fixed;
-    background-size: cover; /* Ensures GIF covers the entire viewport */
-    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
+    background-size: contain; /* Changed to contain to show full GIF, may need adjustment */
+    background-position: center; /* Centers the GIF */
+    min-height: 100vh; /* Minimum viewport height */
+    min-width: 100vw; /* Minimum viewport width */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevents scroll if GIF is larger */
+    overflow: auto; /* Allows scroll if GIF is smaller than viewport */
 }
 
 .buy-btn {
-    padding: 0; /* Remove padding to rely on image size */
+    padding: 0; /* No padding since no text */
     background: url('/button.png') no-repeat center center;
     background-size: contain;
     border: none;
-    border-radius: 10px; /* Slightly rounded for visibility */
+    border-radius: 10px;
     cursor: pointer;
-    width: 300px; /* Increased from 150px */
-    height: 100px; /* Increased from 50px */
+    width: 600px; /* Doubled from 300px for larger size */
+    height: 200px; /* Doubled from 100px for larger size */
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adds visibility with shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Visibility shadow */
 }
 
 .buy-btn:hover {
