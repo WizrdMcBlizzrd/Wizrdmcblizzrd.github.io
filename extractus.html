@@ -5,17 +5,15 @@
 <title>Extractus</title>
 <link rel="stylesheet" href="styles.css">
 </head>
+<body class="stage" data-preload='["payus_page.gif","payus_page.png"]'>
 
-<body class="stage"
-      style="--bg1:url('extractus_page.gif'); --bg2:url('extractus_page.png');"
-      data-preload='["payus_page.gif","payus_page.png"]'>
+  <img class="bg-img" src="extractus_page.gif" alt=""
+       onerror="this.onerror=null; this.src='extractus_page.png'">
 
-  <div class="bg-fill"></div>
-
-  <!-- Use ?debug=1 on this page to grab perfect --x/--y, then replace below -->
+  <!-- Use /extractus.html?debug=1 to grab perfect --x/--y, then paste below -->
   <a class="btn-img"
      href="pay.html"
-     style="--x:84%; --y:86%; --w: clamp(300px, 42vw, 680px);"
+     style="--x:84%; --y:86%; --w: clamp(360px, 46vw, 760px);"
      aria-label="Next">
     <img src="xtractus_button.png" alt="Next">
   </a>
