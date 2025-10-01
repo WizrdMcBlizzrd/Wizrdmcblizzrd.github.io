@@ -1,4 +1,4 @@
-/* Fullscreen background image + pulsating PNG button */
+/* Fullscreen GIF + perfectly aligned full-canvas PNG button overlay */
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -12,38 +12,38 @@ body {
 
 .stage { position: relative; height: 100dvh; }
 
-/* Background as an IMG — simple + reliable */
+/* Background as an <img>; scaled to fit screen without cropping */
 .bg-img {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;     /* change to 'contain' if you want zero cropping */
+  left: 0; top: 0;
+  width: 100vw;
+  height: 100dvh;
+  object-fit: contain;           /* key: no zoom/crop */
+  object-position: center center;
   z-index: -1;
-  pointer-events: none;  /* clicks pass through */
+  pointer-events: none;
   image-rendering: auto;
 }
 
-/* Button placement via CSS vars */
-.btn-img {
-  position: absolute;
-  left: var(--x, 50%);
-  top: var(--y, 50%);
-  transform: translate(-50%, -50%);
-  user-select: none; -webkit-user-drag: none;
+/* Button overlay: full canvas, scaled exactly the same as the bg */
+.btn-overlay {
+  position: fixed;
+  left: 0; top: 0;
+  width: 100vw;
+  height: 100dvh;
+  display: block;
+  z-index: 1;
+}
+.btn-overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;           /* same scaling as bg */
+  object-position: center center;
+  display: block;
+  /* no pulse here to keep perfect alignment */
 }
 
-/* Larger default size; tweak per page with --w */
-.btn-img img {
-  width: var(--w, clamp(320px, 46vw, 720px));
-  height: auto;
-  animation: pulse 1.6s ease-in-out infinite;
-  transition: transform .06s ease;
-}
-.btn-img:active img { transform: scale(.98); }
-
-@keyframes pulse {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.06); }
-  100% { transform: scale(1); }
-}
+/* If you ever use a cropped button on some page, you can pulse it:
+.cropped-btn img { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)} }
+*/
