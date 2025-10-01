@@ -23,7 +23,7 @@ function copyTextToClipboard(text) {
   return Promise.resolve();
 }
 
-// Show tiny toast above a clicked element
+// Toast
 function showToast(el, msg) {
   const r = el.getBoundingClientRect();
   const t = document.createElement('div');
@@ -36,7 +36,7 @@ function showToast(el, msg) {
   setTimeout(() => { t.classList.remove('show'); t.remove(); }, 1200);
 }
 
-// Global handler: copy any [data-copy] then toast
+// Copy any [data-copy]
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-copy]');
   if (!btn) return;
@@ -61,7 +61,6 @@ document.addEventListener('click', (e) => {
     const natW = bg.naturalWidth || 1;
     const natH = bg.naturalHeight || 1;
 
-    // scale + letterbox offsets for object-fit: contain
     const scale = Math.min(rect.width / natW, rect.height / natH);
     const dispW = natW * scale, dispH = natH * scale;
     const offX  = rect.left + (rect.width  - dispW) / 2;
@@ -72,7 +71,6 @@ document.addEventListener('click', (e) => {
       const xImg = parseCoord(px, natW);
       const yImg = parseCoord(py, natH);
 
-      // Optional size (w,h) in image px or %
       const sizeAttr = (el.getAttribute('data-size') || '').split(',');
       if (sizeAttr[0]) el.style.width  = (parseCoord(sizeAttr[0], natW) * scale) + 'px';
       if (sizeAttr[1]) el.style.height = (parseCoord(sizeAttr[1], natH) * scale) + 'px';
@@ -92,7 +90,7 @@ document.addEventListener('click', (e) => {
   addEventListener('resize', positionPins);
   addEventListener('orientationchange', positionPins);
 
-  // Canvas debug: add ?cdebug=1 to page URL to read image-relative coords
+  // Canvas debug: add ?cdebug=1 to a page URL to read image-relative coords
   const q = new URLSearchParams(location.search);
   if (q.get('cdebug') === '1') {
     const hud = document.createElement('div');
