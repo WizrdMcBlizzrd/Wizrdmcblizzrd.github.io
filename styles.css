@@ -1,4 +1,4 @@
-/* Fullscreen background + pulsating PNG button */
+/* Fullscreen background image + pulsating PNG button */
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -10,21 +10,21 @@ body {
   overflow: hidden;
 }
 
-/* Background: we can pass BOTH a GIF and a PNG fallback via CSS vars */
-.bg-fill { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.bg-fill::before {
-  content: "";
-  position: absolute; inset: 0;
-  /* First image wins; if it 404s, browser paints the next one */
-  background-image: var(--bg1), var(--bg2);
-  background-repeat: no-repeat, no-repeat;
-  background-position: center center, center center;
-  background-size: cover, cover; /* change to contain,contain if you hate cropping */
-}
-
 .stage { position: relative; height: 100dvh; }
 
-/* Cropped PNG button positioned with CSS vars; only its box is clickable */
+/* Background as an IMG — simple + reliable */
+.bg-img {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* change to 'contain' if you want zero cropping */
+  z-index: -1;
+  pointer-events: none;  /* clicks pass through */
+  image-rendering: auto;
+}
+
+/* Button placement via CSS vars */
 .btn-img {
   position: absolute;
   left: var(--x, 50%);
@@ -33,13 +33,12 @@ body {
   user-select: none; -webkit-user-drag: none;
 }
 
-/* Bigger default; override with --w per page if you like */
+/* Larger default size; tweak per page with --w */
 .btn-img img {
-  width: var(--w, clamp(260px, 40vw, 620px));
+  width: var(--w, clamp(320px, 46vw, 720px));
   height: auto;
   animation: pulse 1.6s ease-in-out infinite;
   transition: transform .06s ease;
-  image-rendering: auto;
 }
 .btn-img:active img { transform: scale(.98); }
 
@@ -48,9 +47,3 @@ body {
   50%  { transform: scale(1.06); }
   100% { transform: scale(1); }
 }
-
-/* Optional corner helpers if you prefer not to use --x/--y */
-.pos-bottom-right { left: auto; right: 4vw; top: auto; bottom: 4vh; transform: none; }
-.pos-bottom-left  { left: 4vw; bottom: 4vh; top: auto; transform: none; }
-.pos-top-right    { right: 4vw; top: 4vh; left: auto; transform: none; }
-.pos-top-left     { left: 4vw; top: 4vh; transform: none; }
