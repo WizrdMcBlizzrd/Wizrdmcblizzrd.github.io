@@ -5,18 +5,16 @@
 <title>Join Us</title>
 <link rel="stylesheet" href="styles.css">
 </head>
+<body class="stage" data-preload='["extractus_page.gif","extractus_page.png"]'>
 
-<!-- Pass both GIF and PNG; whichever exists will show -->
-<body class="stage"
-      style="--bg1:url('joinus_page.gif'); --bg2:url('joinus_page.png');"
-      data-preload='["extractus_page.gif","extractus_page.png"]'>
+  <!-- Background with PNG fallback -->
+  <img class="bg-img" src="joinus_page.gif" alt=""
+       onerror="this.onerror=null; this.src='joinus_page.png'">
 
-  <div class="bg-fill"></div>
-
-  <!-- Join button (this one you said is already right) -->
+  <!-- This button placement was good on your end; keep or tweak -->
   <a class="btn-img"
      href="extractus.html"
-     style="--x:84%; --y:86%; --w: clamp(300px, 42vw, 680px);"
+     style="--x:84%; --y:86%; --w: clamp(360px, 46vw, 760px);"
      aria-label="Next">
     <img src="joinus_button.png" alt="Join">
   </a>
