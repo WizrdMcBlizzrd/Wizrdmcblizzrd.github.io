@@ -1,36 +1,53 @@
+/* Fullscreen background + pulsating PNG button */
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-    margin: 0;
-    padding: 0;
-    background: url('/gifbackround.gif') no-repeat center center fixed;
-    background-size: contain;
-    background-position: center;
-    min-height: 100vh;
-    min-width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
-    cursor: url('/cursor.png') 150 150, auto; /* Centered hotspot for 300x300px */
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  overflow: hidden;
 }
 
-.buy-btn {
-    padding: 0;
-    background: url('/button.png') no-repeat center center;
-    background-size: contain;
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
-    width: 600px;
-    height: 200px;
-    position: relative;
-    outline: none;
-    box-shadow: none;
+/* Page background is set inline via: style="--bg:url('...')" */
+.bg-fill { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.bg-fill::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--bg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;   /* change to 'contain' if you want zero cropping */
 }
 
-.buy-btn:hover {
-    background-image: url('/button_overlay.png'), url('/button.png');
-    background-size: contain, contain;
-    background-position: center, center;
-    outline: none;
-    box-shadow: none;
+.stage { position: relative; height: 100dvh; }
+
+/* Cropped PNG button positioned with CSS vars; only the PNG’s box is clickable */
+.btn-img {
+  position: absolute;
+  left: var(--x, 50%);                  /* % of viewport width */
+  top: var(--y, 50%);                   /* % of viewport height */
+  transform: translate(-50%, -50%);
+  user-select: none; -webkit-user-drag: none;
 }
+.btn-img img {
+  width: var(--w, min(60vw, 380px));    /* button size */
+  height: auto;
+  animation: pulse 1.6s ease-in-out infinite;
+  transition: transform .06s ease;
+  image-rendering: auto;
+}
+.btn-img:active img { transform: scale(.98); }
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* Optional helpers if you prefer simple corner placement instead of --x/--y */
+.pos-bottom-right { left: auto; right: 4vw; top: auto; bottom: 4vh; transform: none; }
+.pos-bottom-left  { left: 4vw; bottom: 4vh; top: auto; transform: none; }
+.pos-top-right    { right: 4vw; top: 4vh; left: auto; transform: none; }
+.pos-top-left     { left: 4vw; top: 4vh; transform: none; }
