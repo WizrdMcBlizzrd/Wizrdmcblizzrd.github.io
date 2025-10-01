@@ -7,12 +7,22 @@
 </head>
 <body class="stage" data-preload='["payus_page.gif","payus_page.png"]'>
 
-  <img class="bg-img" src="extractus_page.gif" alt=""
+  <!-- Background with fallback -->
+  <img class="bg-img" src="extractus_page.gif" alt="Extractus"
        onerror="this.onerror=null; this.src='extractus_page.png'">
 
-  <!-- Centered full-canvas overlay; exact match to bg scaling -->
-  <a class="btn-overlay" href="pay.html" aria-label="Next">
+  <!-- Visual overlay (not clickable) -->
+  <span class="btn-overlay">
     <img src="xtractus_button.png" alt="">
+  </span>
+
+  <!-- Clickable hotspot: center -->
+  <a class="pin hotspot"
+     href="pay.html"
+     data-pin="50%,50%"
+     data-size="25%,16%"
+     data-anchor="center"
+     aria-label="Next">
   </a>
 
   <script src="script.js"></script>
