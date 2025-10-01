@@ -7,18 +7,17 @@
 </head>
 <body class="stage">
 
-  <!-- Background with fallback -->
   <img class="bg-img" src="payus_page.gif" alt="Pay Us"
        onerror="this.onerror=null; this.src='payus_page.png'">
 
-  <!-- Invisible hotspot over the rat icon that copies your text -->
+  <!-- Invisible hotspot over rat icon; tweak data-pin / data-size if needed -->
   <button
     class="pin hotspot"
-    data-pin="95%,9%"                 <!-- tweak with pay.html?cdebug=1 -->
-    data-size="8%,10%"               <!-- size relative to image -->
+    data-pin="95%,9%"
+    data-size="8%,10%"
     data-anchor="center"
     data-copy="3HQMBbnx6NfbmcGuNGp7qmvLFGzp2H."
-    aria-label="Copy text">
+    aria-label="Copy address">
   </button>
 
   <script src="script.js"></script>
