@@ -7,12 +7,22 @@
 </head>
 <body class="stage" data-preload='["loreus.png"]'>
 
-  <img class="bg-img" src="joinus_page.gif" alt="Join Us background"
+  <!-- Background (GIF with PNG fallback) -->
+  <img class="bg-img" src="joinus_page.gif" alt="Join Us"
        onerror="this.onerror=null; this.src='joinus_page.png'">
 
-  <!-- Go to LOREUS -->
-  <a class="btn-overlay" href="loreus.html" aria-label="Next">
-    <img src="joinus_button.png" alt="Next">
+  <!-- Visual overlay for your art (not clickable) -->
+  <span class="btn-overlay">
+    <img src="joinus_button.png" alt="">
+  </span>
+
+  <!-- Clickable hotspot: bottom-right -->
+  <a class="pin hotspot"
+     href="loreus.html"
+     data-pin="90%,90%"     <!-- adjust with ?cdebug=1 if needed -->
+     data-size="18%,12%"    <!-- width,height relative to image -->
+     data-anchor="center"
+     aria-label="Next">
   </a>
 
   <script src="script.js"></script>
