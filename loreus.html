@@ -7,12 +7,21 @@
 </head>
 <body class="stage" data-preload='["extractus_page.gif","extractus_page.png"]'>
 
-  <!-- Background (PNG), scaled to fit screen (no crop) -->
-  <img class="bg-img" src="loreus.png" alt="Loreus background">
+  <!-- Background (PNG) -->
+  <img class="bg-img" src="loreus.png" alt="Lore Us">
 
-  <!-- Full-canvas button overlay, same scaling as bg -->
-  <a class="btn-overlay" href="extractus.html" aria-label="Next">
-    <img src="loreus_button.png" alt="Next">
+  <!-- Visual overlay (not clickable) -->
+  <span class="btn-overlay">
+    <img src="loreus_button.png" alt="">
+  </span>
+
+  <!-- Clickable hotspot: bottom-right -->
+  <a class="pin hotspot"
+     href="extractus.html"
+     data-pin="90%,90%"
+     data-size="18%,12%"
+     data-anchor="center"
+     aria-label="Next">
   </a>
 
   <script src="script.js"></script>
