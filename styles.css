@@ -18,14 +18,14 @@ body {
   left: 0; top: 0;
   width: 100vw;
   height: 100dvh;
-  object-fit: contain;        /* key: no zoom/crop */
+  object-fit: contain;
   object-position: center center;
   z-index: -1;
   pointer-events: none;
   image-rendering: auto;
 }
 
-/* Visual PNG overlay (matches bg exactly) — not clickable */
+/* Visual PNG overlay (matches bg exactly) — NOT clickable */
 .btn-overlay {
   position: fixed;
   left: 0; top: 0;
@@ -33,7 +33,7 @@ body {
   height: 100dvh;
   display: block;
   z-index: 1;
-  pointer-events: none;       /* clicks pass to hotspots */
+  pointer-events: none;  /* clicks go to hotspots */
 }
 .btn-overlay img {
   width: 100%;
@@ -47,7 +47,7 @@ body {
 .pin {
   position: fixed;
   z-index: 4;
-  transform: translate(-50%, -50%); /* default anchor = center */
+  transform: translate(-50%, -50%); /* anchor center by default */
 }
 
 /* Invisible clickable hotspot */
