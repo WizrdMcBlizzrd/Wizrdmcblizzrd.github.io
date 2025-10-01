@@ -10,29 +10,32 @@ body {
   overflow: hidden;
 }
 
-/* Page background is set inline via: style="--bg:url('...')" */
+/* Background: we can pass BOTH a GIF and a PNG fallback via CSS vars */
 .bg-fill { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 .bg-fill::before {
   content: "";
   position: absolute; inset: 0;
-  background-image: var(--bg);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;   /* change to 'contain' if you want zero cropping */
+  /* First image wins; if it 404s, browser paints the next one */
+  background-image: var(--bg1), var(--bg2);
+  background-repeat: no-repeat, no-repeat;
+  background-position: center center, center center;
+  background-size: cover, cover; /* change to contain,contain if you hate cropping */
 }
 
 .stage { position: relative; height: 100dvh; }
 
-/* Cropped PNG button positioned with CSS vars; only the PNG’s box is clickable */
+/* Cropped PNG button positioned with CSS vars; only its box is clickable */
 .btn-img {
   position: absolute;
-  left: var(--x, 50%);                  /* % of viewport width */
-  top: var(--y, 50%);                   /* % of viewport height */
+  left: var(--x, 50%);
+  top: var(--y, 50%);
   transform: translate(-50%, -50%);
   user-select: none; -webkit-user-drag: none;
 }
+
+/* Bigger default; override with --w per page if you like */
 .btn-img img {
-  width: var(--w, min(60vw, 380px));    /* button size */
+  width: var(--w, clamp(260px, 40vw, 620px));
   height: auto;
   animation: pulse 1.6s ease-in-out infinite;
   transition: transform .06s ease;
@@ -46,7 +49,7 @@ body {
   100% { transform: scale(1); }
 }
 
-/* Optional helpers if you prefer simple corner placement instead of --x/--y */
+/* Optional corner helpers if you prefer not to use --x/--y */
 .pos-bottom-right { left: auto; right: 4vw; top: auto; bottom: 4vh; transform: none; }
 .pos-bottom-left  { left: 4vw; bottom: 4vh; top: auto; transform: none; }
 .pos-top-right    { right: 4vw; top: 4vh; left: auto; transform: none; }
