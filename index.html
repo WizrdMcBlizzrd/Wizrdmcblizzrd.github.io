@@ -6,12 +6,18 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<!-- If your background is a GIF, change .png to .gif below -->
-<body class="stage" style="--bg: url('joinus_page.png');" data-preload='["extractus_page.png"]'>
+<!-- Pass both GIF and PNG; whichever exists will show -->
+<body class="stage"
+      style="--bg1:url('joinus_page.gif'); --bg2:url('joinus_page.png');"
+      data-preload='["extractus_page.gif","extractus_page.png"]'>
+
   <div class="bg-fill"></div>
 
-  <!-- Position the button: tweak --x / --y / --w as needed -->
-  <a class="btn-img" href="extractus.html" style="--x:84%; --y:86%; --w:220px;" aria-label="Next">
+  <!-- Join button (this one you said is already right) -->
+  <a class="btn-img"
+     href="extractus.html"
+     style="--x:84%; --y:86%; --w: clamp(300px, 42vw, 680px);"
+     aria-label="Next">
     <img src="joinus_button.png" alt="Join">
   </a>
 
