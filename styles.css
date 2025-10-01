@@ -75,3 +75,19 @@ body {
   opacity: 1;
   transform: translate(-50%, -140%);
 }
+/* Hide any accidental link text/underline on hotspots */
+.hotspot,
+.hotspot:link,
+.hotspot:visited,
+.hotspot:hover,
+.hotspot:active {
+  text-decoration: none !important;
+  color: transparent !important;
+}
+.hotspot::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
