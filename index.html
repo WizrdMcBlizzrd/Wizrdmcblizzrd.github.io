@@ -2,29 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Join Us</title>
+<title>End</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="stage" data-preload='["loreus.png"]'>
+<body class="stage">
 
-  <!-- Background (GIF with PNG fallback) -->
-  <img class="bg-img" src="joinus_page.gif" alt="Join Us"
-       onerror="this.onerror=null; this.src='joinus_page.png'">
+  <!-- Background with PNG fallback -->
+  <img class="bg-img" src="newend.gif" alt="End"
+       onerror="this.onerror=null; this.src='newend.png'">
 
-  <!-- Visual overlay (not clickable) -->
-  <span class="btn-overlay">
-    <img src="joinus_button.png" alt="">
-  </span>
+  <!-- Optional PNG overlay for the button art -->
+  <!-- <span class="btn-overlay"><img src="newend_button.png" alt=""></span> -->
 
-  <!-- Clickable hotspot: bottom-right (clean, fully closed tag) -->
-  <a
-    class="pin hotspot"
-    href="loreus.html"
-    data-pin="90%,90%"
-    data-size="22%,14%"
-    data-anchor="center"
-    aria-label="Next">
-  </a>
+  <!-- CLICKABLE HOTSPOT (the “button”):
+       - This one copies text. Change data-copy to whatever you want, or
+         remove data-copy and add an href if you prefer navigation. -->
+  <button class="pin hotspot"
+          data-pin="50%,50%"       <!-- TODO: set exact spot via ?cdebug=1 -->
+          data-size="22%,14%"
+          data-anchor="center"
+          data-copy="PASTE THE EXACT TEXT YOU WANT TO COPY HERE"
+          aria-label="Copy">
+  </button>
 
   <script src="script.js"></script>
 </body>
