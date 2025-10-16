@@ -5,34 +5,26 @@
 <title>Start</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="stage" data-preload='["newend.gif","newend.GIF","newend.png"]'>
+<body class="stage">
 
-  <!-- Background: try .gif, .GIF, then .png -->
+  <!-- Try common casings to avoid case-sensitivity issues -->
   <img class="bg-img" id="bgStart" alt="Start">
-
-  <!-- Hotspot: top-left “YES” area (tweak with ?cdebug=1 if needed) -->
-  <a class="pin hotspot"
-     href="newend.html"
-     data-pin="25%,15%"      <!-- center of the region -->
-     data-size="50%,30%"     <!-- width,height of the region -->
-     data-anchor="center"
-     aria-label="Go to end">
-  </a>
-
-  <!-- Simple loader that adapts to your actual file casing -->
   <script>
-    (function loadStart() {
-      const img = document.getElementById('bgStart');
-      const candidates = ["newstart.gif", "newstart.GIF", "newstart.png"];
-      let i = 0;
-      function tryNext() {
-        if (i >= candidates.length) return;
-        img.onerror = tryNext;
-        img.src = candidates[i++];
-      }
-      tryNext();
+    (function(){
+      const el=document.getElementById('bgStart');
+      const files=["newstart.gif","newstart.GIF","newstart.png"];
+      let i=0; function next(){ if(i>=files.length) return; el.onerror=next; el.src=files[i++]; }
+      next();
     })();
   </script>
+
+  <!-- Hotspot: top-left region goes to newend -->
+  <a class="pin hotspot"
+     href="newend.html"
+     data-pin="25%,15%"   <!-- center of YES area; adjust with index.html?cdebug=1 -->
+     data-size="50%,30%"  <!-- width,height of clickable box -->
+     data-anchor="center"
+     aria-label="Go to end"></a>
 
   <script src="script.js"></script>
 </body>
