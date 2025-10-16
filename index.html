@@ -2,28 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>End</title>
+<title>Start</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="stage">
+<body class="stage" data-preload='["newend.gif","newend.png"]'>
 
-  <!-- Background with PNG fallback -->
-  <img class="bg-img" src="newend.gif" alt="End"
-       onerror="this.onerror=null; this.src='newend.png'">
+  <!-- Start background (GIF with PNG fallback) -->
+  <img class="bg-img" src="newstart.gif" alt="Start"
+       onerror="this.onerror=null; this.src='newstart.png'">
 
-  <!-- Optional PNG overlay for the button art -->
-  <!-- <span class="btn-overlay"><img src="newend_button.png" alt=""></span> -->
+  <!-- OPTIONAL: if you have a PNG overlay for start, show it here -->
+  <!-- <span class="btn-overlay"><img src="newstart_button.png" alt=""></span> -->
 
-  <!-- CLICKABLE HOTSPOT (the “button”):
-       - This one copies text. Change data-copy to whatever you want, or
-         remove data-copy and add an href if you prefer navigation. -->
-  <button class="pin hotspot"
-          data-pin="50%,50%"       <!-- TODO: set exact spot via ?cdebug=1 -->
-          data-size="22%,14%"
-          data-anchor="center"
-          data-copy="PASTE THE EXACT TEXT YOU WANT TO COPY HERE"
-          aria-label="Copy">
-  </button>
+  <!-- CLICKABLE HOTSPOT: top-left area (Yes) -> go to newend.html
+       data-pin is the center of the box (percent of image),
+       data-size is width,height (percent of image). -->
+  <a class="pin hotspot"
+     href="newend.html"
+     data-pin="25%,15%"   <!-- center of the top-left region -->
+     data-size="50%,30%"  <!-- box spans left half & top ~30% -->
+     data-anchor="center"
+     aria-label="Go to end">
+  </a>
 
   <script src="script.js"></script>
 </body>
