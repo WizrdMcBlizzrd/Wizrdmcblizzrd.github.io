@@ -1,40 +1,68 @@
-// --------- Robust copy routine used by the end-page hotspot ----------
-function copyHotspot(el) {
-  const text = el.getAttribute('data-copy') || '';
-  if (!text) return;
+// ---------- Pin elements relative to fitted background image ----------
+(function pinToCanvas(){
+  const bg = document.querySelector('.bg-img'); if (!bg) return;
 
-  // 1) Preferred: async clipboard (HTTPS only)
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text)
-      .then(() => showToast(el, 'Copied!'))
-      .catch(() => legacyCopy(el, text));
-    return;
+  const parse = (val, nat)=> String(val).trim().endsWith('%') ? (parseFloat(val)/100)*nat : parseFloat(val);
+
+  function positionPins(){
+    const rect = bg.getBoundingClientRect();
+    const natW = bg.naturalWidth||1, natH = bg.naturalHeight||1;
+    const scale = Math.min(rect.width/natW, rect.height/natH);
+    const dispW = natW*scale, dispH = natH*scale;
+    const offX = rect.left + (rect.width - dispW)/2;
+    const offY = rect.top  + (rect.height- dispH)/2;
+
+    document.querySelectorAll('.pin').forEach(el=>{
+      const [px,py='50%'] = (el.getAttribute('data-pin')||'50%,50%').split(',');
+      const xImg = parse(px,natW), yImg = parse(py,natH);
+      const size = (el.getAttribute('data-size')||'').split(',');
+      if (size[0]) el.style.width  = (parse(size[0],natW)*scale)+'px';
+      if (size[1]) el.style.height = (parse(size[1],natH)*scale)+'px';
+      el.style.left = Math.round(offX + xImg*scale)+'px';
+      el.style.top  = Math.round(offY + yImg*scale)+'px';
+      const anchor = (el.getAttribute('data-anchor')||'center').toLowerCase();
+      el.style.transform = (anchor==='topleft'||anchor==='top-left') ? 'none' : 'translate(-50%,-50%)';
+    });
   }
-  // 2) Fallback
-  legacyCopy(el, text);
+  if (bg.complete) positionPins(); else bg.addEventListener('load', positionPins);
+  addEventListener('resize', positionPins); addEventListener('orientationchange', positionPins);
+
+  // Canvas debug: ?cdebug=1 → copies data-pin on click
+  const q = new URLSearchParams(location.search);
+  if (q.get('cdebug')==='1'){
+    const hud = document.createElement('div');
+    hud.style.cssText="position:fixed;right:8px;bottom:8px;z-index:9;background:rgba(0,0,0,.55);color:#fff;font:12px system-ui;padding:6px 8px;border:1px solid rgba(255,255,255,.2);border-radius:8px;";
+    hud.textContent='move over image…'; document.body.appendChild(hud);
+    document.addEventListener('mousemove', e=>{
+      const r = bg.getBoundingClientRect(), natW=bg.naturalWidth||1, natH=bg.naturalHeight||1;
+      const scale=Math.min(r.width/natW, r.height/natH);
+      const dispW=natW*scale, dispH=natH*scale, offX=r.left+(r.width-dispW)/2, offY=r.top+(r.height-dispH)/2;
+      const xIn=(e.clientX-offX)/scale, yIn=(e.clientY-offY)/scale;
+      const pctX=Math.max(0,Math.min(100,(xIn/natW)*100)), pctY=Math.max(0,Math.min(100,(yIn/natH)*100));
+      hud.textContent=`image: ${xIn.toFixed(1)}px, ${yIn.toFixed(1)}px | ${pctX.toFixed(1)}%, ${pctY.toFixed(1)}% (click copies)`;
+      hud.dataset.pct=`${pctX.toFixed(1)}%,${pctY.toFixed(1)}%`;
+    });
+    document.addEventListener('click', ()=>navigator.clipboard.writeText(`data-pin="${hud.dataset.pct||'50%,50%'}"`).catch(()=>{}), true);
+  }
+})();
+
+// ---------- Robust copy function for end page hotspot ----------
+function showToast(el, msg) {
+  const r = el.getBoundingClientRect();
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  t.style.left=(r.left+r.width/2)+'px'; t.style.top=r.top+'px';
+  document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); t.remove(); }, 1200);
 }
 
-function legacyCopy(el, text) {
-  // contenteditable trick works well on iOS + old browsers
-  const span = document.createElement('span');
-  span.textContent = text;
-  span.style.position = 'fixed';
-  span.style.left = '-9999px';
-  span.setAttribute('contenteditable', 'true');
-  document.body.appendChild(span);
-
-  const range = document.createRange();
-  range.selectNodeContents(span);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-
-  try { document.execCommand('copy'); } catch (_) {}
-  sel.removeAllRanges();
-  span.remove();
-
-  showToast(el, 'Copied!');
+function copyHotspot(el){
+  const text = el.getAttribute('data-copy')||''; if (!text) return;
+  if (navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>showToast(el,'Copied!')).catch(()=>fallback());
+  } else { fallback(); }
+  function fallback(){
+    const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select(); try{ document.execCommand('copy'); }catch(_){}
+    ta.remove(); showToast(el,'Copied!');
+  }
 }
-
-// If you kept the generic [data-copy] click handler from earlier, it’s fine to keep;
-// copyHotspot() runs explicitly on the button and handles everything.
