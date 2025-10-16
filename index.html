@@ -5,25 +5,34 @@
 <title>Start</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="stage" data-preload='["newend.gif","newend.png"]'>
+<body class="stage" data-preload='["newend.gif","newend.GIF","newend.png"]'>
 
-  <!-- Start background (GIF with PNG fallback) -->
-  <img class="bg-img" src="newstart.gif" alt="Start"
-       onerror="this.onerror=null; this.src='newstart.png'">
+  <!-- Background: try .gif, .GIF, then .png -->
+  <img class="bg-img" id="bgStart" alt="Start">
 
-  <!-- OPTIONAL: if you have a PNG overlay for start, show it here -->
-  <!-- <span class="btn-overlay"><img src="newstart_button.png" alt=""></span> -->
-
-  <!-- CLICKABLE HOTSPOT: top-left area (Yes) -> go to newend.html
-       data-pin is the center of the box (percent of image),
-       data-size is width,height (percent of image). -->
+  <!-- Hotspot: top-left “YES” area (tweak with ?cdebug=1 if needed) -->
   <a class="pin hotspot"
      href="newend.html"
-     data-pin="25%,15%"   <!-- center of the top-left region -->
-     data-size="50%,30%"  <!-- box spans left half & top ~30% -->
+     data-pin="25%,15%"      <!-- center of the region -->
+     data-size="50%,30%"     <!-- width,height of the region -->
      data-anchor="center"
      aria-label="Go to end">
   </a>
+
+  <!-- Simple loader that adapts to your actual file casing -->
+  <script>
+    (function loadStart() {
+      const img = document.getElementById('bgStart');
+      const candidates = ["newstart.gif", "newstart.GIF", "newstart.png"];
+      let i = 0;
+      function tryNext() {
+        if (i >= candidates.length) return;
+        img.onerror = tryNext;
+        img.src = candidates[i++];
+      }
+      tryNext();
+    })();
+  </script>
 
   <script src="script.js"></script>
 </body>
