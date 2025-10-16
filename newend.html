@@ -7,30 +7,25 @@
 </head>
 <body class="stage">
 
-  <!-- Background: try GIF/GIF/PNG -->
   <img class="bg-img" id="bgEnd" alt="End">
-
-  <!-- Hotspot over the kitten: PUT YOUR TEXT in data-copy -->
-  <button
-    class="pin hotspot"
-    type="button"
-    onclick="copyHotspot(this)"
-    data-pin="91%,88%"        <!-- adjust with newend.html?cdebug=1 -->
-    data-size="10%,12%"
-    data-anchor="center"
-    data-copy="CHANGE_ME"     <!-- <<< replace with the exact text you want copied -->
-    aria-label="Copy">
-  </button>
-
   <script>
-    (function loadEnd() {
-      const img = document.getElementById('bgEnd');
-      const candidates = ["newend.gif", "newend.GIF", "newend.png"];
-      let i = 0;
-      function tryNext() { if (i >= candidates.length) return; img.onerror = tryNext; img.src = candidates[i++]; }
-      tryNext();
+    (function(){
+      const el=document.getElementById('bgEnd');
+      const files=["newend.gif","newend.GIF","newend.png"];
+      let i=0; function next(){ if(i>=files.length) return; el.onerror=next; el.src=files[i++]; }
+      next();
     })();
   </script>
+
+  <!-- Hotspot over kitten: replace CHANGE_ME with the text you want copied -->
+  <button class="pin hotspot"
+          type="button"
+          onclick="copyHotspot(this)"
+          data-pin="91%,88%"
+          data-size="10%,12%"
+          data-anchor="center"
+          data-copy="CHANGE_ME"
+          aria-label="Copy"></button>
 
   <script src="script.js"></script>
 </body>
