@@ -2,51 +2,27 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  overflow: hidden;
-}
+body { margin: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; overflow: hidden; }
 
 .stage { position: relative; height: 100dvh; }
 
-/* Background as <img>; fit without cropping */
+/* Background fits screen without cropping */
 .bg-img {
-  position: fixed; left: 0; top: 0;
-  width: 100vw; height: 100dvh;
-  object-fit: contain; object-position: center;
-  z-index: -1; pointer-events: none;
+  position: fixed; left: 0; top: 0; width: 100vw; height: 100dvh;
+  object-fit: contain; object-position: center; z-index: -1; pointer-events: none;
 }
 
-/* Optional visual PNG overlay that scales exactly like bg (not clickable) */
-.btn-overlay {
-  position: fixed; left: 0; top: 0;
-  width: 100vw; height: 100dvh;
-  pointer-events: none; z-index: 1;
-}
-.btn-overlay img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
-
-/* Elements pinned to artwork (JS positions these) */
-.pin {
-  position: fixed; z-index: 4;
-  transform: translate(-50%, -50%); /* default anchor center */
-}
+/* Elements pinned to artwork (sized/positioned by JS) */
+.pin { position: fixed; z-index: 4; transform: translate(-50%, -50%); }
 
 /* Invisible clickable hotspot */
-.hotspot { background: transparent; border: 0; padding: 0; cursor: pointer; }
-
-/* Hide any accidental link text */
-.hotspot, .hotspot:link, .hotspot:visited, .hotspot:hover, .hotspot:active {
-  text-decoration: none !important; color: transparent !important;
-}
-.hotspot::after { content: ""; display: block; width: 100%; height: 100%; }
+.hotspot { background: transparent; border: 0; padding: 0; cursor: pointer; text-decoration: none !important; color: transparent !important; }
+.hotspot::after { content: ""; display: block; width: 100%; height: 100%; } /* ensures clickable area */
 
 /* Tiny toast */
 .toast {
   position: fixed; z-index: 5; padding: 6px 10px; border-radius: 10px;
   background: rgba(0,0,0,.85); color: #fff; font: 600 12px/1 system-ui;
-  transform: translate(-50%, -120%); opacity: 0; transition: opacity .18s, transform .18s;
+  transform: translate(-50%, -120%); opacity: 0; transition: opacity .18s ease, transform .18s ease;
 }
 .toast.show { opacity: 1; transform: translate(-50%, -140%); }
