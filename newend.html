@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>End</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="stage">
+
+  <!-- Background (GIF with PNG fallback) -->
+  <img class="bg-img" src="newend.gif" alt="End"
+       onerror="this.onerror=null; this.src='newend.png'">
+
+  <!-- Optional: if you have a PNG overlay for the end page, show it here -->
+  <!-- <span class="btn-overlay"><img src="newend_button.png" alt=""></span> -->
+
+  <!-- Invisible hotspot over the kitten (copies your text). 
+       Tweak data-pin/data-size with newend.html?cdebug=1 for pixel-perfect fit. -->
+  <button
+    class="pin hotspot"
+    data-pin="91%,88%"        <!-- position on the artwork (percent of image) -->
+    data-size="10%,12%"       <!-- width,height of the clickable box -->
+    data-anchor="center"
+    data-copy="3HQMBbnx6NfbmcGuNGp7qmvLFGzp2HpJwH"     <!-- <<< put the exact text you want to copy here -->
+    aria-label="Copy">
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
