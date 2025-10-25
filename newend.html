@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>End</title>
+<title>Mint</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="stage">
 
-  <img class="bg-img" id="bgEnd" alt="End">
+  <!-- Background: try .gif, .GIF, then .png (place files in repo root) -->
+  <img class="bg-img" id="bgEnd" alt="Mint Details">
   <script>
     (function(){
       const el=document.getElementById('bgEnd');
@@ -17,17 +18,20 @@
     })();
   </script>
 
-  <!-- Hotspot over kitten: replace CHANGE_ME with the text you want copied -->
+  <!-- Hotspot over kitten (or wherever you want). 
+       Set exact spot with newend.html?cdebug=1, then paste into data-pin.
+       Change data-size to fit the clickable box.
+       Replace CHANGE_ME with the text they should copy. -->
   <button class="pin hotspot"
           type="button"
           onclick="copyHotspot(this)"
-          data-pin="91%,88%"
-          data-size="10%,12%"
+          data-pin="91%,88%"       <!-- position on the artwork -->
+          data-size="10%,12%"      <!-- width,height of the box -->
           data-anchor="center"
-          data-copy="3HQMBbnx6NfbmcGuNGp7qmvLFGzp2HpJwH"
-          aria-label="Copy"></button>
+          data-copy="CHANGE_ME"    <!-- <<< put your copy text here -->
+          aria-label="Copy">
+  </button>
 
   <script src="script.js"></script>
 </body>
 </html>
-
