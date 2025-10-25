@@ -1,5 +1,4 @@
-/* Fullscreen image pages + precise hotspots + copy toast */
-
+/* Fullscreen image + precise hotspot + copy toast */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body { margin: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; overflow: hidden; }
@@ -15,7 +14,7 @@ body { margin: 0; background: #000; color: #fff; font-family: system-ui, -apple-
 /* Elements pinned to artwork (sized/positioned by JS) */
 .pin { position: fixed; z-index: 4; transform: translate(-50%, -50%); }
 
-/* Invisible clickable hotspot */
+/* Invisible clickable hotspot (the “button”) */
 .hotspot { background: transparent; border: 0; padding: 0; cursor: pointer; text-decoration: none !important; color: transparent !important; }
 .hotspot::after { content: ""; display: block; width: 100%; height: 100%; } /* ensures clickable area */
 
