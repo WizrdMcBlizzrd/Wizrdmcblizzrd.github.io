@@ -1,31 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
+<meta http-equiv="refresh" content="0; url=newend.html">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Start</title>
-<link rel="stylesheet" href="styles.css">
+<title>Redirecting…</title>
 </head>
-<body class="stage">
-
-  <!-- Try common casings to avoid case-sensitivity issues -->
-  <img class="bg-img" id="bgStart" alt="Start">
-  <script>
-    (function(){
-      const el=document.getElementById('bgStart');
-      const files=["newstart.gif","newstart.GIF","newstart.png"];
-      let i=0; function next(){ if(i>=files.length) return; el.onerror=next; el.src=files[i++]; }
-      next();
-    })();
-  </script>
-
-  <!-- Hotspot: top-left region goes to newend -->
-  <a class="pin hotspot"
-     href="newend.html"
-     data-pin="25%,15%"   <!-- center of YES area; adjust with index.html?cdebug=1 -->
-     data-size="50%,30%"  <!-- width,height of clickable box -->
-     data-anchor="center"
-     aria-label="Go to end"></a>
-
-  <script src="script.js"></script>
-</body>
-</html>
+<body>
+If you are not redirected, <a href="newend.html">click here</a>.
+</body></html>
