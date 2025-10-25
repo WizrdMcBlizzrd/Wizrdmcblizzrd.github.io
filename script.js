@@ -1,4 +1,4 @@
-// ---------- Pin elements relative to fitted background image ----------
+// Pin elements relative to the fitted background image (object-fit: contain)
 (function pinToCanvas(){
   const bg = document.querySelector('.bg-img'); if (!bg) return;
 
@@ -27,7 +27,7 @@
   if (bg.complete) positionPins(); else bg.addEventListener('load', positionPins);
   addEventListener('resize', positionPins); addEventListener('orientationchange', positionPins);
 
-  // Canvas debug: ?cdebug=1 → copies data-pin on click
+  // Canvas debug: add ?cdebug=1 to URL to get image-relative coords on click
   const q = new URLSearchParams(location.search);
   if (q.get('cdebug')==='1'){
     const hud = document.createElement('div');
@@ -46,7 +46,7 @@
   }
 })();
 
-// ---------- Robust copy function for end page hotspot ----------
+// Robust copy function (works on HTTPS, iOS, older browsers)
 function showToast(el, msg) {
   const r = el.getBoundingClientRect();
   const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
@@ -54,7 +54,6 @@ function showToast(el, msg) {
   document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show'));
   setTimeout(()=>{ t.classList.remove('show'); t.remove(); }, 1200);
 }
-
 function copyHotspot(el){
   const text = el.getAttribute('data-copy')||''; if (!text) return;
   if (navigator.clipboard && window.isSecureContext){
