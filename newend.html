@@ -7,28 +7,10 @@
   *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#000;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;overflow:hidden}
   .stage{position:relative;height:100dvh}
   .bg-img{position:fixed;left:0;top:0;width:100vw;height:100dvh;object-fit:contain;object-position:center;z-index:-1;pointer-events:none}
-
-  /* Hotspot (the actual copy button) */
-  .pin{position:fixed;z-index:3;transform:translate(-50%,-50%);background:transparent;border:0;padding:0;cursor:pointer}
+  .pin{position:fixed;z-index:4;transform:translate(-50%,-50%);background:transparent;border:0;padding:0;cursor:pointer}
   .pin::after{content:"";display:block;width:100%;height:100%}
-
-  /* Toast */
-  .toast{position:fixed;z-index:10;padding:6px 10px;border-radius:10px;background:rgba(0,0,0,.85);color:#fff;
-         font:600 12px/1 system-ui;transform:translate(-50%,-120%);opacity:0;transition:opacity .18s,transform .18s}
+  .toast{position:fixed;z-index:10;padding:6px 10px;border-radius:10px;background:rgba(0,0,0,.85);color:#fff;font:600 12px/1 system-ui;transform:translate(-50%,-120%);opacity:0;transition:opacity .18s,transform .18s}
   .toast.show{opacity:1;transform:translate(-50%,-140%)}
-
-  /* EDITOR */
-  .toolbar{position:fixed;right:10px;bottom:10px;z-index:11;display:flex;gap:8px;align-items:center;
-           background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px}
-  .btn{appearance:none;border:1px solid #3a3a3a;background:#1c1c1f;color:#fff;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
-  .btn.primary{background:#2b69ff;border-color:#2b69ff}
-  .vals{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#cfe2ff}
-  .edit-layer{position:fixed;inset:0;z-index:9;pointer-events:none}
-  .edit-box{position:absolute;border:2px dashed #4ad;box-shadow:0 0 0 2px rgba(74,173,255,.2) inset}
-  .handle{position:absolute;width:14px;height:14px;background:#4ad;border:2px solid #fff;border-radius:50%;pointer-events:auto}
-  .handle.tl{left:-9px;top:-9px} .handle.tr{right:-9px;top:-9px}
-  .handle.bl{left:-9px;bottom:-9px} .handle.br{right:-9px;bottom:-9px}
-  .edit-grab{position:absolute;inset:0;pointer-events:auto;cursor:move}
 </style>
 </head>
 <body class="stage">
@@ -44,209 +26,63 @@
     })();
   </script>
 
-  <!-- The real hotspot (copy button) -->
+  <!-- Hotspot (your exact placement) -->
   <button id="hs" class="pin" type="button"
-          data-pin="91%,88%"          <!-- center of box on artwork -->
-          data-size="10%,12%"         <!-- width,height of box -->
+          data-pin="90.0%,94.8%"   <!-- center of the box on the artwork -->
+          data-size="19.1%,4.6%"   <!-- width,height of the box -->
           data-anchor="center"
-          data-copy="CHANGE_ME"       <!-- <<< put YOUR text here -->
-          aria-label="Copy"></button>
+          data-copy="3HQMBbnx6NfbmcGuNGp7qmvLFGzp2HpJwH"    <!-- <<< put your copy text here -->
+          aria-label="Copy">
+  </button>
 
-  <!-- Editor UI -->
-  <div class="edit-layer" id="editLayer" hidden>
-    <div class="edit-box" id="editBox">
-      <div class="edit-grab" id="editGrab" title="Drag to move"></div>
-      <div class="handle tl" data-h="tl"></div>
-      <div class="handle tr" data-h="tr"></div>
-      <div class="handle bl" data-h="bl"></div>
-      <div class="handle br" data-h="br"></div>
-    </div>
-  </div>
-  <div class="toolbar" id="toolbar" hidden>
-    <button class="btn" id="btnEdit">Edit</button>
-    <button class="btn" id="btnCancel" hidden>Cancel</button>
-    <button class="btn primary" id="btnApply" hidden>Copy & Lock</button>
-    <span class="vals" id="vals"></span>
-  </div>
-
-  <script>
-    // ------- math helpers to map image space <-> screen (object-fit: contain)
-    const bg = document.getElementById('bg'), hs = document.getElementById('hs');
-    function getGeom(){
+<script>
+  // Pin to canvas (object-fit: contain math)
+  (function(){
+    const bg=document.getElementById('bg'), hs=document.getElementById('hs');
+    const parse=(v,n)=>String(v).trim().endsWith('%')?(parseFloat(v)/100)*n:parseFloat(v);
+    function applyPin(){
       const r=bg.getBoundingClientRect();
       const natW=bg.naturalWidth||1, natH=bg.naturalHeight||1;
       const scale=Math.min(r.width/natW,r.height/natH);
       const dispW=natW*scale, dispH=natH*scale;
       const offX=r.left+(r.width-dispW)/2, offY=r.top+(r.height-dispH)/2;
-      return {r,natW,natH,scale,dispW,dispH,offX,offY};
-    }
-    function pctToImg(p,n){ return (parseFloat(p)/100)*n; }
-    function imgToPct(px,n){ return (px/n)*100; }
 
-    function applyPin(){
-      const g=getGeom();
       const [px,py='50%']=(hs.getAttribute('data-pin')||'50%,50%').split(',');
       const [sw,sh]=(hs.getAttribute('data-size')||'20%,12%').split(',');
-      const xImg = String(px).includes('%')? pctToImg(px,g.natW) : parseFloat(px);
-      const yImg = String(py).includes('%')? pctToImg(py,g.natH) : parseFloat(py);
-      const wImg = String(sw).includes('%')? pctToImg(sw,g.natW) : parseFloat(sw);
-      const hImg = String(sh).includes('%')? pctToImg(sh,g.natH) : parseFloat(sh);
-      const xScreen = Math.round(g.offX + xImg * g.scale);
-      const yScreen = Math.round(g.offY + yImg * g.scale);
-      hs.style.left = xScreen+'px';
-      hs.style.top  = yScreen+'px';
-      hs.style.width  = (wImg*g.scale)+'px';
-      hs.style.height = (hImg*g.scale)+'px';
-    }
+      const xImg=parse(px,natW), yImg=parse(py,natH);
+      const wImg=parse(sw,natW),  hImg=parse(sh,natH);
 
-    // robust copy
+      hs.style.left = Math.round(offX + xImg*scale)+'px';
+      hs.style.top  = Math.round(offY + yImg*scale)+'px';
+      hs.style.width  = (wImg*scale)+'px';
+      hs.style.height = (hImg*scale)+'px';
+      const anchor=(hs.getAttribute('data-anchor')||'center').toLowerCase();
+      hs.style.transform=(anchor==='topleft'||anchor==='top-left')?'none':'translate(-50%,-50%)';
+    }
+    if(bg.complete) applyPin(); else bg.addEventListener('load',applyPin);
+    addEventListener('resize',applyPin); addEventListener('orientationchange',applyPin);
+
+    // Robust copy
     function showToast(el,msg){
-      const r=el.getBoundingClientRect();
+      const rr=el.getBoundingClientRect();
       const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
-      t.style.left=(r.left+r.width/2)+'px'; t.style.top=r.top+'px';
+      t.style.left=(rr.left+rr.width/2)+'px'; t.style.top=rr.top+'px';
       document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show'));
       setTimeout(()=>{t.classList.remove('show'); t.remove();},1200);
     }
-    function copyHotspot(){
-      const text=hs.getAttribute('data-copy')||''; if(!text) return;
+    function copyHotspot(el){
+      const text=el.getAttribute('data-copy')||''; if(!text) return;
       if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(text).then(()=>showToast(hs,'Copied!')).catch(fallback);
-      } else fallback();
+        navigator.clipboard.writeText(text).then(()=>showToast(el,'Copied!')).catch(fallback);
+      } else { fallback(); }
       function fallback(){
         const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px';
         document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy');}catch(_){}
-        ta.remove(); showToast(hs,'Copied!');
+        ta.remove(); showToast(el,'Copied!');
       }
     }
-    hs.addEventListener('click', copyHotspot);
-
-    // Reflow on load/resize
-    function reflow(){ if(bg.complete) applyPin(); }
-    bg.addEventListener('load', reflow); window.addEventListener('resize', reflow); window.addEventListener('orientationchange', reflow);
-    reflow();
-
-    // ------- EDITOR (drag & resize with handles)
-    const editLayer = document.getElementById('editLayer');
-    const editBox   = document.getElementById('editBox');
-    const editGrab  = document.getElementById('editGrab');
-    const toolbar   = document.getElementById('toolbar');
-    const btnEdit   = document.getElementById('btnEdit');
-    const btnCancel = document.getElementById('btnCancel');
-    const btnApply  = document.getElementById('btnApply');
-    const valsEl    = document.getElementById('vals');
-
-    // start with editor ON so you can place it immediately
-    enableEditor(true);
-
-    function enableEditor(on){
-      editLayer.hidden = !on;
-      btnCancel.hidden = !on;
-      btnApply.hidden  = !on;
-      btnEdit.hidden   =  on;
-      toolbar.hidden   = false;
-      // position edit box to current hs
-      const g=getGeom();
-      const [px,py]=(hs.getAttribute('data-pin')||'50%,50%').split(',');
-      const [sw,sh]=(hs.getAttribute('data-size')||'20%,12%').split(',');
-      const xImg=pctToImg(px,g.natW), yImg=pctToImg(py,g.natH);
-      const wImg=pctToImg(sw,g.natW), hImg=pctToImg(sh,g.natH);
-      const left = Math.round(g.offX + (xImg - wImg/2) * g.scale);
-      const top  = Math.round(g.offY + (yImg - hImg/2) * g.scale);
-      const ww   = Math.round(wImg * g.scale), hh = Math.round(hImg * g.scale);
-      Object.assign(editBox.style,{left:left+'px',top:top+'px',width:ww+'px',height:hh+'px'});
-      updateVals();
-    }
-
-    btnEdit.addEventListener('click', ()=>enableEditor(true));
-    btnCancel.addEventListener('click', ()=>{ enableEditor(false); applyPin(); });
-    btnApply.addEventListener('click', ()=>{
-      // convert editBox rect back to image percentages and set attributes
-      const g=getGeom(); const eb=editBox.getBoundingClientRect();
-      const xImg = ( (eb.left - g.offX) / g.scale ) + (eb.width / g.scale)/2;
-      const yImg = ( (eb.top  - g.offY) / g.scale ) + (eb.height/ g.scale)/2;
-      const wImg =  (eb.width / g.scale);
-      const hImg =  (eb.height/ g.scale);
-      const cx = imgToPct(xImg, g.natW), cy = imgToPct(yImg, g.natH);
-      const ww = imgToPct(wImg, g.natW), hh = imgToPct(hImg, g.natH);
-      hs.setAttribute('data-pin',  `${cx.toFixed(1)}%,${cy.toFixed(1)}%`);
-      hs.setAttribute('data-size', `${ww.toFixed(1)}%,${hh.toFixed(1)}%`);
-      applyPin();
-      // copy snippet for you
-      const snippet = `data-pin="${cx.toFixed(1)}%,${cy.toFixed(1)}%" data-size="${ww.toFixed(1)}%,${hh.toFixed(1)}%"`;
-      navigator.clipboard && navigator.clipboard.writeText(snippet);
-      enableEditor(false);
-      // show what was copied
-      valsEl.textContent = snippet;
-    });
-
-    function updateVals(){
-      const g=getGeom(); const eb=editBox.getBoundingClientRect();
-      const xImg = ( (eb.left - g.offX) / g.scale ) + (eb.width / g.scale)/2;
-      const yImg = ( (eb.top  - g.offY) / g.scale ) + (eb.height/ g.scale)/2;
-      const wImg =  (eb.width / g.scale);
-      const hImg =  (eb.height/ g.scale);
-      const cx = imgToPct(xImg, g.natW), cy = imgToPct(yImg, g.natH);
-      const ww = imgToPct(wImg, g.natW), hh = imgToPct(hImg, g.natH);
-      valsEl.textContent = `data-pin="${cx.toFixed(1)}%,${cy.toFixed(1)}%" data-size="${ww.toFixed(1)}%,${hh.toFixed(1)}%"`;
-    }
-
-    // Drag to move
-    dragElem(editGrab, (dx,dy)=>{
-      const eb=editBox.getBoundingClientRect();
-      Object.assign(editBox.style,{left:(eb.left+dx)+'px',top:(eb.top+dy)+'px'});
-      updateVals();
-    });
-
-    // Resize via corner handles
-    document.querySelectorAll('.handle').forEach(h=>{
-      dragElem(h, (dx,dy)=>{
-        const eb=editBox.getBoundingClientRect();
-        let left=eb.left, top=eb.top, w=eb.width, hgt=eb.height;
-        const type=h.getAttribute('data-h');
-        if(type==='tl'){ left+=dx; top+=dy; w-=dx; hgt-=dy; }
-        if(type==='tr'){ top+=dy; w+=dx; hgt-=dy; }
-        if(type==='bl'){ left+=dx; w-=dx; hgt+=dy; }
-        if(type==='br'){ w+=dx; hgt+=dy; }
-        if(w<10) w=10; if(hgt<10) hgt=10;
-        Object.assign(editBox.style,{left:left+'px',top:top+'px',width:w+'px',height:hgt+'px'});
-        updateVals();
-      });
-    });
-
-    // generic pointer drag helper (mouse + touch)
-    function dragElem(el, ondrag){
-      let lastX,lastY,active=false;
-      const start = (e)=>{
-        active=true;
-        const p = ('touches' in e)? e.touches[0] : e;
-        lastX=p.clientX; lastY=p.clientY;
-        e.preventDefault();
-        window.addEventListener('mousemove',move,{passive:false});
-        window.addEventListener('touchmove',move,{passive:false});
-        window.addEventListener('mouseup',end,{passive:false});
-        window.addEventListener('touchend',end,{passive:false});
-      };
-      const move = (e)=>{
-        if(!active) return;
-        const p = ('touches' in e)? e.touches[0] : e;
-        const dx=p.clientX-lastX, dy=p.clientY-lastY;
-        lastX=p.clientX; lastY=p.clientY;
-        ondrag(dx,dy);
-        e.preventDefault();
-      };
-      const end = ()=>{
-        active=false;
-        window.removeEventListener('mousemove',move);
-        window.removeEventListener('touchmove',move);
-        window.removeEventListener('mouseup',end);
-        window.removeEventListener('touchend',end);
-      };
-      el.addEventListener('mousedown',start,{passive:false});
-      el.addEventListener('touchstart',start,{passive:false});
-    }
-
-    // show toolbar immediately
-    toolbar.hidden=false;
-  </script>
+    document.getElementById('hs').addEventListener('click', function(){ copyHotspot(this); });
+  })();
+</script>
 </body>
 </html>
