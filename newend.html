@@ -3,35 +3,114 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mint</title>
-<link rel="stylesheet" href="styles.css">
+<style>
+  *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#000;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;overflow:hidden}
+  .stage{position:relative;height:100dvh}
+  .bg-img{position:fixed;left:0;top:0;width:100vw;height:100dvh;object-fit:contain;object-position:center;z-index:-1;pointer-events:none}
+  .pin{position:fixed;z-index:4;transform:translate(-50%,-50%)}
+  .hotspot{background:transparent;border:0;padding:0;cursor:pointer;color:transparent;text-decoration:none}
+  .hotspot::after{content:"";display:block;width:100%;height:100%}
+  .toast{position:fixed;z-index:5;padding:6px 10px;border-radius:10px;background:rgba(0,0,0,.85);color:#fff;font:600 12px/1 system-ui;transform:translate(-50%,-120%);opacity:0;transition:opacity .18s,transform .18s}
+  .toast.show{opacity:1;transform:translate(-50%,-140%)}
+</style>
 </head>
 <body class="stage">
 
-  <!-- Background: try .gif, .GIF, then .png (place files in repo root) -->
-  <img class="bg-img" id="bgEnd" alt="Mint Details">
-  <script>
-    (function(){
-      const el=document.getElementById('bgEnd');
-      const files=["newend.gif","newend.GIF","newend.png"];
-      let i=0; function next(){ if(i>=files.length) return; el.onerror=next; el.src=files[i++]; }
-      next();
-    })();
-  </script>
+  <!-- Background (GIF with case fallback, then PNG) -->
+  <img class="bg-img" id="bgEnd" alt="Mint">
 
-  <!-- Hotspot over kitten (or wherever you want). 
-       Set exact spot with newend.html?cdebug=1, then paste into data-pin.
-       Change data-size to fit the clickable box.
-       Replace CHANGE_ME with the text they should copy. -->
-  <button class="pin hotspot"
-          type="button"
-          onclick="copyHotspot(this)"
-          data-pin="91%,88%"       <!-- position on the artwork -->
-          data-size="10%,12%"      <!-- width,height of the box -->
-          data-anchor="center"
-          data-copy="CHANGE_ME"    <!-- <<< put your copy text here -->
-          aria-label="Copy">
+  <!-- CLICKABLE HOTSPOT (the kitten). 
+       1) Open newend.html?cdebug=1
+       2) Click the exact kitten spot → a data-pin="x%,y%" snippet is copied
+       3) Paste it into data-pin below
+       4) Tweak data-size to fit the clickable box
+       5) Put your text into data-copy -->
+  <button
+    class="pin hotspot"
+    type="button"
+    onclick="copyHotspot(this)"
+    data-pin="91%,88%"         <!-- <<< UPDATE after you re-check with ?cdebug=1 -->
+    data-size="10%,12%"        <!-- width,height of the clickable box -->
+    data-anchor="center"
+    data-copy="3HQMBbnx6NfbmcGuNGp7qmvLFGzp2HpJwH"      <!-- <<< put the exact text you want copied -->
+    aria-label="Copy">
   </button>
 
-  <script src="script.js"></script>
+<script>
+  // Load background with case fallback
+  (function(){
+    const el=document.getElementById('bgEnd');
+    const files=["newend.gif","newend.GIF","newend.png"];
+    let i=0; function next(){ if(i>=files.length) return; el.onerror=next; el.src=files[i++]; }
+    next();
+  })();
+
+  // ---- Pin elements relative to the fitted background image (object-fit: contain)
+  (function pinToCanvas(){
+    const bg=document.querySelector('.bg-img'); if(!bg) return;
+    const parse=(v,n)=>String(v).trim().endsWith('%')?(parseFloat(v)/100)*n:parseFloat(v);
+
+    function positionPins(){
+      const r=bg.getBoundingClientRect();
+      const natW=bg.naturalWidth||1, natH=bg.naturalHeight||1;
+      const scale=Math.min(r.width/natW,r.height/natH);
+      const dispW=natW*scale, dispH=natH*scale;
+      const offX=r.left+(r.width-dispW)/2, offY=r.top+(r.height-dispH)/2;
+
+      document.querySelectorAll('.pin').forEach(el=>{
+        const [px,py='50%']=(el.getAttribute('data-pin')||'50%,50%').split(',');
+        const xImg=parse(px,natW), yImg=parse(py,natH);
+        const size=(el.getAttribute('data-size')||'').split(',');
+        if(size[0]) el.style.width=(parse(size[0],natW)*scale)+'px';
+        if(size[1]) el.style.height=(parse(size[1],natH)*scale)+'px';
+        el.style.left=Math.round(offX+xImg*scale)+'px';
+        el.style.top =Math.round(offY+yImg*scale)+'px';
+        const anchor=(el.getAttribute('data-anchor')||'center').toLowerCase();
+        el.style.transform=(anchor==='topleft'||anchor==='top-left')?'none':'translate(-50%,-50%)';
+      });
+    }
+    if(bg.complete) positionPins(); else bg.addEventListener('load',positionPins);
+    addEventListener('resize',positionPins); addEventListener('orientationchange',positionPins);
+
+    // Canvas debug: ?cdebug=1 → shows coords and copies data-pin on click
+    const q=new URLSearchParams(location.search);
+    if(q.get('cdebug')==='1'){
+      const hud=document.createElement('div');
+      hud.style.cssText="position:fixed;right:8px;bottom:8px;z-index:9;background:rgba(0,0,0,.55);color:#fff;font:12px system-ui;padding:6px 8px;border:1px solid rgba(255,255,255,.2);border-radius:8px;";
+      hud.textContent='move over image…'; document.body.appendChild(hud);
+      document.addEventListener('mousemove',e=>{
+        const r=bg.getBoundingClientRect(), natW=bg.naturalWidth||1, natH=bg.naturalHeight||1;
+        const scale=Math.min(r.width/natW,r.height/natH);
+        const dispW=natW*scale, dispH=natH*scale, offX=r.left+(r.width-dispW)/2, offY=r.top+(r.height-dispH)/2;
+        const xIn=(e.clientX-offX)/scale, yIn=(e.clientY-offY)/scale;
+        const pctX=Math.max(0,Math.min(100,(xIn/natW)*100)), pctY=Math.max(0,Math.min(100,(yIn/natH)*100));
+        hud.textContent=`image: ${xIn.toFixed(1)}px, ${yIn.toFixed(1)}px | ${pctX.toFixed(1)}%, ${pctY.toFixed(1)}% (click copies)`;
+        hud.dataset.pct=`${pctX.toFixed(1)}%,${pctY.toFixed(1)}%`;
+      });
+      document.addEventListener('click',()=>navigator.clipboard.writeText(`data-pin="${hud.dataset.pct||'50%,50%'}"`).catch(()=>{}),true);
+    }
+  })();
+
+  // ---- Robust copy for hotspot (HTTPS preferred; falls back gracefully)
+  function showToast(el,msg){
+    const r=el.getBoundingClientRect();
+    const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+    t.style.left=(r.left+r.width/2)+'px'; t.style.top=r.top+'px';
+    document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show'));
+    setTimeout(()=>{t.classList.remove('show'); t.remove();},1200);
+  }
+  function copyHotspot(el){
+    const text=el.getAttribute('data-copy')||''; if(!text) return;
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(()=>showToast(el,'Copied!')).catch(fallback);
+    } else { fallback(); }
+    function fallback(){
+      const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      ta.remove(); showToast(el,'Copied!');
+    }
+  }
+</script>
 </body>
 </html>
